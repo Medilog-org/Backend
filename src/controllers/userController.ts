@@ -19,9 +19,17 @@ const signUp = async (req: Request, res: Response): Promise<void> => {
     email,
     password,
     dateOfBirth,
+    gender,
     phoneNumber,
     photo,
     profileDescription,
+    role,
+    // Role-specific fields
+    pastHealthChallenge,
+    allergies,
+    currentMedication,
+    surgicalHistory,
+    extraDetails,
     facility,
     cadre,
     firstTimeConsultationFee,
@@ -32,7 +40,9 @@ const signUp = async (req: Request, res: Response): Promise<void> => {
     nationalIdentification,
     medicalIndustryInsurance,
     lAndA,
-    role,
+    BscRNCertificate,
+    nursingCouncilCertificate,
+    nurseLicense,
   } = req.body;
 
   try {
@@ -47,33 +57,78 @@ const signUp = async (req: Request, res: Response): Promise<void> => {
     }
 
     const hashedPassword = await hashPassword(password);
-    const newUser: User = {
-      id: uuidv4(),
-      fullName,
-      email,
-      password: hashedPassword,
-      dateOfBirth,
-      phoneNumber,
-      photo,
-      profileDescription,
-      facility,
-      cadre,
-      firstTimeConsultationFee,
-      followUpConsultationFee,
-      availableTime,
-      annualLicense,
-      fullLicense,
-      nationalIdentification,
-      medicalIndustryInsurance,
-      lAndA,
-      role: role || "patient",
-    };
+
+    let newUser: User;
+
+    if (role === "patient") {
+      newUser = {
+        id: uuidv4(),
+        fullName,
+        email,
+        password: hashedPassword,
+        dateOfBirth,
+        gender,
+        phoneNumber,
+        photo,
+        profileDescription,
+        role,
+        pastHealthChallenge,
+        allergies,
+        currentMedication,
+        surgicalHistory,
+        extraDetails,
+      };
+    } else if (role === "doctor") {
+      newUser = {
+        id: uuidv4(),
+        fullName,
+        email,
+        password: hashedPassword,
+        dateOfBirth,
+        gender,
+        phoneNumber,
+        photo,
+        profileDescription,
+        role,
+        facility,
+        cadre,
+        firstTimeConsultationFee,
+        followUpConsultationFee,
+        availableTime,
+        annualLicense,
+        fullLicense,
+        nationalIdentification,
+        medicalIndustryInsurance,
+        lAndA,
+      };
+    } else if (role === "nurse") {
+      newUser = {
+        id: uuidv4(),
+        fullName,
+        email,
+        password: hashedPassword,
+        dateOfBirth,
+        gender,
+        phoneNumber,
+        photo,
+        profileDescription,
+        role,
+        facility,
+        BscRNCertificate,
+        nursingCouncilCertificate,
+        nurseLicense,
+        extraDetails,
+      };
+    } else {
+      res.status(400).json({ message: "Invalid role specified" });
+      return;
+    }
 
     await usersCollection.insertOne(newUser);
 
     const token = jwt.sign({ id: newUser.id }, secretKey, { expiresIn: "1h" });
 
-    res.status(201).json({ token });
+    res.status(201).json({ userId: newUser.id, token });
   } catch (err) {
     res.status(500).json({ message: "Internal server error" });
   }
@@ -142,7 +197,7 @@ const createUser = async (req: Request, res: Response): Promise<void> => {
 
 const updateUserProfile = async (
   req: Request,
-  res: Response,
+  res: Response
 ): Promise<void> => {
   const { id } = req.params;
   const updatedUser: User = req.body;
@@ -152,7 +207,7 @@ const updateUserProfile = async (
     const usersCollection = getUsersCollection(db);
     const result = await usersCollection.updateOne(
       { id },
-      { $set: updatedUser },
+      { $set: updatedUser }
     );
 
     if (result.modifiedCount > 0) {
