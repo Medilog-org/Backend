@@ -1,5 +1,6 @@
 import express from "express";
 import userRoutes from "./routes/userRoutes";
+import uploadRoutes from "./routes/uploadRoutes";
 import cors from "cors";
 
 const app = express();
@@ -16,5 +17,6 @@ app.get("/", (_req, res) => {
 });
 
 app.use("/user", userRoutes);
+app.use("/file", uploadRoutes);
 
 export default app;
