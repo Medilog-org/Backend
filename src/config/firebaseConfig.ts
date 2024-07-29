@@ -4,15 +4,13 @@ import { getFirestore } from "firebase/firestore";
 import { getStorage } from "firebase/storage";
 
 const firebaseConfig = {
-  apiKey: "AIzaSyCF7aTc4N4wlyJxKdf2fnjFJjCWlRynXOM",
-  authDomain: "medilog-f77ea.firebaseapp.com",
-  projectId: "medilog-f77ea",
-  storageBucket: "medilog-f77ea.appspot.com",
-  messagingSenderId: "425574707859",
-  appId: "1:425574707859:web:4b18cb25e573e143261366",
-  measurementId: "G-535XSB7M90",
+  apiKey: "AIzaSyAS1UZe5nxEfSVLQwDADOJbqyW7QjJcpu8",
+  authDomain: "medilog-ec19b.firebaseapp.com",
+  projectId: "medilog-ec19b",
+  storageBucket: "medilog-ec19b.appspot.com",
+  messagingSenderId: "1073972182214",
+  appId: "1:1073972182214:web:e91e9059604506d1e92bc7",
 };
-
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
 

@@ -2,7 +2,6 @@ import { Request, Response } from "express";
 import { storage } from "../config/firebaseConfig";
 import { ref, uploadBytes } from "firebase/storage";
 import { v4 as uuidv4 } from "uuid";
-import { log } from "console";
 
 export const uploadFile = async (
   req: Request,
